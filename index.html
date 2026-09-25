@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS VAULT - Digital Cyber Security</title>
+    <title>BRANKAS SIBER - Password Manager</title>
     
     <!-- Library Supabase & CryptoJS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -19,63 +19,40 @@
             --bg-dark: #050505;
             --bg-panel: rgba(10, 10, 15, 0.6);
             --border-color: rgba(0, 240, 255, 0.2);
-            --border-glow: rgba(0, 240, 255, 0.8);
             --text-main: #e0e6ed;
             --text-muted: #64748b;
             --neon-cyan: #00f0ff;
             --neon-purple: #bc13fe;
             --neon-pink: #ff0055;
             --danger: #ff0033;
-            --shadow-glow: 0 0 15px rgba(0, 240, 255, 0.3);
         }
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            box-sizing: border-box; margin: 0; padding: 0;
             font-family: 'Rajdhani', sans-serif;
         }
 
         body {
-            background: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding: 40px 20px;
-            overflow-x: hidden;
-            position: relative;
+            background: var(--bg-dark); color: var(--text-main);
+            min-height: 100vh; padding: 40px 20px;
+            overflow-x: hidden; position: relative;
         }
 
-        /* Background Grid Effect */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: 
                 linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 0;
-            pointer-events: none;
+            background-size: 40px 40px; z-index: 0; pointer-events: none;
         }
         
-        /* Background Glows */
         .bg-glow {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.4;
-            z-index: 0;
+            position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.4; z-index: 0;
         }
         .glow-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -10%; left: -10%; }
         .glow-2 { width: 300px; height: 300px; background: var(--neon-cyan); bottom: -10%; right: -10%; }
 
-        .app-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        .app-container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
         .view { display: none; }
         .view.active { display: block; animation: glitchIn 0.5s ease; }
 
@@ -84,12 +61,7 @@
             100% { opacity: 1; transform: scale(1); filter: blur(0); }
         }
 
-        /* === TYPOGRAPHY === */
-        h1, h2, h3, .font-cyber {
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; text-transform: uppercase; }
         h1 { font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--neon-cyan); }
         h2 { font-size: 22px; font-weight: 700; color: var(--neon-cyan); text-shadow: 0 0 8px rgba(0, 240, 255, 0.5); }
         h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
@@ -97,17 +69,12 @@
         .subtitle { color: var(--neon-cyan); font-size: 14px; margin-top: 5px; letter-spacing: 1px; font-weight: 500; }
         .muted { color: var(--text-muted); font-size: 13px; }
 
-        /* === PANELS / CARDS === */
         .auth-card, .card {
-            background: var(--bg-panel);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color);
-            border-radius: 4px; /* Sudut sedikit tajam */
-            padding: 35px;
+            background: var(--bg-panel); backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color); border-radius: 4px; padding: 35px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 240, 255, 0.05);
             position: relative;
         }
-        /* Pojok Cyber dekoratif */
         .auth-card::before, .auth-card::after, .card::before, .card::after {
             content: ''; position: absolute; width: 15px; height: 15px; border: 2px solid var(--neon-cyan);
         }
@@ -119,23 +86,17 @@
         .logo {
             width: 60px; height: 60px; margin: 0 auto 15px;
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: #000;
-            box-shadow: 0 0 20px var(--neon-cyan);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 28px; color: #000; box-shadow: 0 0 20px var(--neon-cyan);
         }
         .logo-sm { width: 40px; height: 40px; background: #000; border: 1px solid var(--neon-cyan); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--neon-cyan); font-size: 18px; }
 
-        /* === FORM === */
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--neon-cyan); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
         .input-wrap {
-            display: flex; align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            padding: 0 14px;
+            display: flex; align-items: center; background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 2px; padding: 0 14px;
             transition: all 0.3s ease;
         }
         .input-wrap:focus-within {
@@ -144,112 +105,51 @@
         }
         .input-wrap i { color: var(--text-muted); font-size: 14px; margin-right: 12px; }
         .input-wrap input, .input-wrap select {
-            background: transparent; border: none; outline: none;
-            padding: 14px 0; color: #fff; font-size: 15px; width: 100%; font-family: 'Rajdhani', sans-serif; font-weight: 500;
+            background: transparent; border: none; outline: none; padding: 14px 0;
+            color: #fff; font-size: 15px; width: 100%; font-family: 'Rajdhani', sans-serif; font-weight: 500;
         }
         .input-wrap select option { background: #000; color: #fff; }
 
-        /* === BUTTONS === */
         .btn-primary {
-            width: 100%; padding: 14px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            border: none; border-radius: 2px;
-            color: #000; font-size: 15px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 2px;
-            cursor: pointer; transition: all 0.3s ease;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            margin-top: 10px;
-            clip-path: polygon(10px 0, 100% 0, 100% 70%, calc(100% - 10px) 100%, 0 100%, 0 30%); /* Potongan cyberpunk */
+            width: 100%; padding: 14px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            border: none; border-radius: 2px; color: #000; font-size: 15px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;
+            clip-path: polygon(10px 0, 100% 0, 100% 70%, calc(100% - 10px) 100%, 0 100%, 0 30%);
         }
         .btn-primary:hover { box-shadow: 0 0 20px var(--neon-cyan); filter: brightness(1.2); }
 
         .btn-ghost {
-            background: transparent; border: 1px solid var(--neon-pink);
-            color: var(--neon-pink); padding: 8px 16px; border-radius: 2px;
-            cursor: pointer; font-weight: 600; font-size: 13px;
-            text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center; gap: 8px; transition: all 0.3s;
+            background: transparent; border: 1px solid var(--neon-pink); color: var(--neon-pink);
+            padding: 8px 16px; border-radius: 2px; cursor: pointer; font-weight: 600; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; transition: all 0.3s;
         }
         .btn-ghost:hover { background: rgba(255, 0, 85, 0.1); box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
 
         .toggle-text { text-align: center; margin-top: 24px; color: var(--text-muted); font-size: 14px; letter-spacing: 0.5px; }
         #toggle-auth { color: var(--neon-purple); cursor: pointer; font-weight: 600; text-shadow: 0 0 5px var(--neon-purple); }
-        .error-message { color: var(--neon-pink); text-align: center; font-size: 13px; margin-top: 12px; text-shadow: 0 0 5px var(--neon-pink); }
+        .error-message { color: var(--neon-pink); text-align: center; font-size: 13px; margin-top: 12px; text-shadow: 0 0 5px var(--neon-pink); display: none; }
 
-        /* === DASHBOARD === */
-        .dashboard-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding-bottom: 24px; margin-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
-        }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); }
         .header-left { display: flex; align-items: center; gap: 12px; }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 24px;
-            align-items: start;
-        }
+        .dashboard-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
         .add-card { position: sticky; top: 20px; }
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color); }
+        .badge-counter { font-size: 11px; font-weight: 700; color: var(--neon-cyan); background: rgba(0, 240, 255, 0.1); padding: 4px 10px; border: 1px solid var(--neon-cyan); border-radius: 2px; box-shadow: 0 0 5px rgba(0, 240, 255, 0.3); }
 
-        .list-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 16px; padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .badge-counter {
-            font-size: 11px; font-weight: 700; color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.1); padding: 4px 10px;
-            border: 1px solid var(--neon-cyan); border-radius: 2px;
-            box-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
-        }
-
-        /* === VAULT LIST === */
         .vault-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .vault-item {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            padding: 16px; display: flex; align-items: center;
-            background: rgba(0, 0, 0, 0.4);
-            transition: all 0.3s ease;
-            position: relative; overflow: hidden;
-        }
-        /* Garis cyber kiri pada list item */
-        .vault-item::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-            background: var(--neon-purple); opacity: 0; transition: all 0.3s;
-        }
-        .vault-item:hover {
-            border-color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.05);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
-            transform: translateX(5px);
-        }
+        .vault-item { border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 2px; padding: 16px; display: flex; align-items: center; background: rgba(0, 0, 0, 0.4); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .vault-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--neon-purple); opacity: 0; transition: all 0.3s; }
+        .vault-item:hover { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.05); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); transform: translateX(5px); }
         .vault-item:hover::before { opacity: 1; box-shadow: 0 0 10px var(--neon-purple); }
 
-        .vault-icon {
-            width: 40px; height: 40px; border-radius: 2px;
-            background: #000; border: 1px solid var(--neon-cyan);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: var(--neon-cyan); margin-right: 16px;
-            box-shadow: inset 0 0 5px rgba(0, 240, 255, 0.2);
-        }
-
+        .vault-icon { width: 40px; height: 40px; border-radius: 2px; background: #000; border: 1px solid var(--neon-cyan); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--neon-cyan); margin-right: 16px; box-shadow: inset 0 0 5px rgba(0, 240, 255, 0.2); }
         .vault-content { flex: 1; }
         .vault-content h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
         .vault-content p { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; display: flex; align-items: center; font-weight: 500; }
         .vault-content p i { margin-right: 8px; width: 14px; color: var(--neon-purple); }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 2px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; background: transparent; color: var(--neon-purple); border: 1px solid var(--neon-purple); box-shadow: 0 0 5px rgba(188, 19, 254, 0.3); }
 
-        .badge {
-            display: inline-block; padding: 3px 8px; border-radius: 2px;
-            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            margin-top: 8px; background: transparent; color: var(--neon-purple);
-            border: 1px solid var(--neon-purple);
-            box-shadow: 0 0 5px rgba(188, 19, 254, 0.3);
-        }
-
-        /* === RESPONSIVE === */
         @media (max-width: 768px) {
             .dashboard-grid { grid-template-columns: 1fr; }
             .add-card { position: static; }
@@ -270,20 +170,20 @@
             <div class="auth-card">
                 <div class="auth-header">
                     <div class="logo"><i class="fas fa-shield-halved"></i></div>
-                    <h1>Nexus Vault</h1>
-                    <p class="subtitle">Cyber Security Protocol Initiated</p>
+                    <h1>Brankas Siber</h1>
+                    <p class="subtitle">Protokol Keamanan Data Diaktifkan</p>
                 </div>
                 
                 <div class="form-group">
-                    <label>User ID / Email</label>
+                    <label>Email Pengguna</label>
                     <div class="input-wrap">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" placeholder="user@nexus.io">
+                        <input type="email" id="email" placeholder="email@perusahaan.com">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Access Code</label>
+                    <label>Kata Sandi Akun</label>
                     <div class="input-wrap">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="password" placeholder="••••••••••••">
@@ -291,15 +191,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Crypto Key <span class="muted">(Master Password)</span></label>
+                    <label>Kunci Enkripsi <span class="muted">(Master Password)</span></label>
                     <div class="input-wrap">
                         <i class="fas fa-key"></i>
                         <input type="password" id="master-password" placeholder="••••••••••••">
                     </div>
                 </div>
 
-                <button id="auth-btn" class="btn-primary">Initialize System</button>
-                <p id="toggle-text" class="toggle-text">No access? <span id="toggle-auth">Register here</span></p>
+                <button id="auth-btn" class="btn-primary">Masuk ke Sistem</button>
+                <p id="toggle-text" class="toggle-text">Belum punya akses? <span id="toggle-auth">Daftar di sini</span></p>
                 <p id="auth-error" class="error-message"></p>
             </div>
         </div>
@@ -310,40 +210,39 @@
                 <div class="header-left">
                     <div class="logo-sm"><i class="fas fa-shield-halved"></i></div>
                     <div>
-                        <h2>Secure Database</h2>
-                        <p class="muted">Encrypted Credentials Storage</p>
+                        <h2>Basis Data Aman</h2>
+                        <p class="muted">Penyimpanan Kredensial Terenkripsi</p>
                     </div>
                 </div>
-                <button id="logout-btn" class="btn-ghost"><i class="fas fa-power-off"></i> Disconnect</button>
+                <button id="logout-btn" class="btn-ghost"><i class="fas fa-power-off"></i> Keluar</button>
             </header>
 
             <div class="dashboard-grid">
-                <!-- Kolom Kiri: Form Tambah Data -->
                 <aside class="card add-card">
-                    <h3><i class="fas fa-plus-circle"></i> Inject Data</h3>
+                    <h3><i class="fas fa-plus-circle"></i> Masukkan Data</h3>
                     <div class="form-group">
-                        <label>System Name</label>
+                        <label>Nama Layanan</label>
                         <div class="input-wrap">
                             <i class="fas fa-tag"></i>
-                            <input type="text" id="label" placeholder="GitHub Server">
+                            <input type="text" id="label" placeholder="cth: Server GitHub">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Email / Username</label>
                         <div class="input-wrap">
                             <i class="fas fa-at"></i>
-                            <input type="text" id="target-email" placeholder="user@email.com">
+                            <input type="text" id="target-email" placeholder="email@layanan.com">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Password</label>
                         <div class="input-wrap">
                             <i class="fas fa-key"></i>
-                            <input type="text" id="target-password" placeholder="Enter password">
+                            <input type="text" id="target-password" placeholder="Masukkan password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Category</label>
+                        <label>Kategori</label>
                         <div class="input-wrap">
                             <i class="fas fa-folder"></i>
                             <select id="category">
@@ -354,18 +253,15 @@
                             </select>
                         </div>
                     </div>
-                    <button id="add-btn" class="btn-primary"><i class="fas fa-save"></i> Encrypt & Save</button>
+                    <button id="add-btn" class="btn-primary"><i class="fas fa-save"></i> Enkripsi & Simpan</button>
                 </aside>
 
-                <!-- Kolom Kanan: List Data -->
                 <main class="card list-card">
                     <div class="list-header">
-                        <h3>Decrypted Logs</h3>
-                        <span class="badge-counter" id="item-count">0 Items</span>
+                        <h3>Data Tersimpan</h3>
+                        <span class="badge-counter" id="item-count">0 Item</span>
                     </div>
-                    <div id="vault-list" class="vault-list">
-                        <!-- Data ditampilkan disini -->
-                    </div>
+                    <div id="vault-list" class="vault-list"></div>
                 </main>
             </div>
         </div>
@@ -373,7 +269,7 @@
 
     <script>
         // === KONFIGURASI SUPABASE ===
-        // Ganti dengan kredensial Supabase Anda
+        // Ganti dengan URL dan Anon Key dari project Supabase Anda
         const SUPABASE_URL = 'https://dhvjoubaolutcejrvrsq.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodmpvdWJhb2x1dGNlanJ2cnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzY0OTQsImV4cCI6MjEwNTkxMjQ5NH0.ZAMdDQn0SzgERT5ftAuowts373TTzHlg30fidcfUGAs';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -392,15 +288,15 @@
             isLogin = !isLogin;
             authError.style.display = 'none';
             if (isLogin) {
-                document.querySelector('.auth-header h1').innerText = 'Nexus Vault';
-                document.querySelector('.subtitle').innerText = 'Cyber Security Protocol Initiated';
-                authBtn.innerHTML = 'Initialize System';
-                toggleText.innerHTML = 'No access? <span id="toggle-auth">Register here</span>';
+                document.querySelector('.auth-header h1').innerText = 'Brankas Siber';
+                document.querySelector('.subtitle').innerText = 'Protokol Keamanan Data Diaktifkan';
+                authBtn.innerHTML = 'Masuk ke Sistem';
+                toggleText.innerHTML = 'Belum punya akses? <span id="toggle-auth">Daftar di sini</span>';
             } else {
-                document.querySelector('.auth-header h1').innerText = 'New Identity';
-                document.querySelector('.subtitle').innerText = 'Establish Secure Connection';
-                authBtn.innerHTML = 'Create Account';
-                toggleText.innerHTML = 'Have access? <span id="toggle-auth">Login here</span>';
+                document.querySelector('.auth-header h1').innerText = 'Identitas Baru';
+                document.querySelector('.subtitle').innerText = 'Buat Koneksi Aman';
+                authBtn.innerHTML = 'Buat Akun Sekarang';
+                toggleText.innerHTML = 'Sudah punya akses? <span id="toggle-auth">Masuk di sini</span>';
             }
             document.getElementById('toggle-auth').addEventListener('click', toggleAuthView);
         }
@@ -411,7 +307,7 @@
             const masterPass = document.getElementById('master-password').value;
 
             if (!email || !password || !masterPass) {
-                authError.innerText = 'SYSTEM ERROR: All fields are required.';
+                authError.innerText = 'SISTEM ERROR: Semua kolom wajib diisi.';
                 authError.style.display = 'block';
                 return;
             }
@@ -420,18 +316,41 @@
 
             try {
                 if (isLogin) {
-                    const { error } = await supabase.auth.signInWithPassword({ email, password });
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                     if (error) throw error;
                     loadVault();
                 } else {
-                    const { error } = await supabase.auth.signUp({ email, password });
+                    // Proses Daftar Akun
+                    const { data, error } = await supabase.auth.signUp({ email, password });
                     if (error) throw error;
-                    alert('Registration complete. Verify email then login.');
-                    toggleAuthView();
+                    
+                    // Cek apakah verifikasi email diaktifkan di Supabase
+                    if (data.user && !data.session) {
+                        authError.innerText = 'Pendaftaran berhasil! Silakan verifikasi email Anda, lalu login.';
+                        authError.style.color = 'var(--neon-cyan)';
+                        authError.style.display = 'block';
+                        alert('Pendaftaran berhasil! Silakan verifikasi email Anda, lalu login.');
+                        toggleAuthView(); // Kembali ke mode login
+                    } else {
+                        // Jika verifikasi email dimatikan, langsung masuk
+                        authError.innerText = 'Pendaftaran berhasil! Silakan masuk.';
+                        authError.style.color = 'var(--neon-cyan)';
+                        authError.style.display = 'block';
+                        alert('Pendaftaran berhasil! Silakan masuk dengan akun tersebut.');
+                        toggleAuthView(); // Kembali ke mode login
+                    }
                 }
             } catch (error) {
-                authError.innerText = `ACCESS DENIED: ${error.message}`;
+                // Tangkap error dari Supabase dan tampilkan dalam Bahasa Indonesia
+                let errMsg = error.message;
+                if (errMsg.includes("User already registered")) errMsg = "Pengguna dengan email ini sudah terdaftar.";
+                else if (errMsg.includes("Password should be at least 6 characters")) errMsg = "Password akun minimal harus 6 karakter.";
+                else if (errMsg.includes("Invalid login credentials")) errMsg = "Email atau Password Akun salah.";
+                
+                authError.innerText = `AKSES DITOLAK: ${errMsg}`;
+                authError.style.color = 'var(--neon-pink)';
                 authError.style.display = 'block';
+                console.error("Detail Error Supabase:", error);
             }
         }
 
@@ -451,15 +370,15 @@
             vaultList.innerHTML = '';
 
             if (error || !data) {
-                vaultList.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:40px 0; font-family: 'Orbitron'; font-size:12px;"><i class="fas fa-database" style="font-size:32px; display:block; margin-bottom:12px;"></i>NO DATA IN STORAGE</p>`;
-                itemCount.innerText = '0 Items';
+                vaultList.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:40px 0; font-family: 'Orbitron'; font-size:12px;"><i class="fas fa-database" style="font-size:32px; display:block; margin-bottom:12px;"></i>TIDAK ADA DATA TERSENSIMPAN</p>`;
+                itemCount.innerText = '0 Item';
                 return;
             }
 
             try {
                 const bytes = CryptoJS.AES.decrypt(data.ciphertext, currentMasterPassword);
                 const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-                itemCount.innerText = `${decryptedData.length} Items`;
+                itemCount.innerText = `${decryptedData.length} Item`;
 
                 decryptedData.forEach(item => {
                     let iconClass = 'fa-globe';
@@ -482,7 +401,7 @@
                     `;
                 });
             } catch (e) {
-                vaultList.innerHTML = '<p style="color:var(--neon-pink); text-align:center; padding:20px; font-family: \'Orbitron\'; font-size:12px;">DECRYPTION FAILED: WRONG CRYPTO KEY</p>';
+                vaultList.innerHTML = '<p style="color:var(--neon-pink); text-align:center; padding:20px; font-family: \'Orbitron\'; font-size:12px;">DEKRIPSI GAGAL: KUNCI ENKRIPSI SALAH</p>';
             }
         }
 
@@ -493,7 +412,7 @@
             const category = document.getElementById('category').value;
 
             if (!label || !email || !password) {
-                alert('SYSTEM ERROR: All fields are required.');
+                alert('SISTEM ERROR: Semua kolom wajib diisi.');
                 return;
             }
 
@@ -511,7 +430,7 @@
                     const bytes = CryptoJS.AES.decrypt(data.ciphertext, currentMasterPassword);
                     vaultArray = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
                 } catch (e) {
-                    alert('DECRYPTION FAILED. Check Master Password.');
+                    alert('DEKRIPSI GAGAL. Periksa Master Password.');
                     return;
                 }
             }
