@@ -27,10 +27,7 @@
             --danger: #ff0033;
         }
 
-        * {
-            box-sizing: border-box; margin: 0; padding: 0;
-            font-family: 'Rajdhani', sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; }
 
         body {
             background: var(--bg-dark); color: var(--text-main);
@@ -46,9 +43,7 @@
             background-size: 40px 40px; z-index: 0; pointer-events: none;
         }
         
-        .bg-glow {
-            position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.4; z-index: 0;
-        }
+        .bg-glow { position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.4; z-index: 0; }
         .glow-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -10%; left: -10%; }
         .glow-2 { width: 300px; height: 300px; background: var(--neon-cyan); bottom: -10%; right: -10%; }
 
@@ -127,7 +122,11 @@
         .btn-ghost:hover { background: rgba(255, 0, 85, 0.1); box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
 
         .toggle-text { text-align: center; margin-top: 24px; color: var(--text-muted); font-size: 14px; letter-spacing: 0.5px; }
-        #toggle-auth { color: var(--neon-purple); cursor: pointer; font-weight: 600; text-shadow: 0 0 5px var(--neon-purple); }
+        .toggle-text button { /* Styling untuk tombol daftar di sini */
+            background: none; border: none; color: var(--neon-purple); cursor: pointer; font-weight: 600;
+            text-shadow: 0 0 5px var(--neon-purple); font-family: 'Rajdhani', sans-serif; font-size: 14px;
+            letter-spacing: 0.5px; text-decoration: underline;
+        }
         .error-message { color: var(--neon-pink); text-align: center; font-size: 13px; margin-top: 12px; text-shadow: 0 0 5px var(--neon-pink); display: none; }
 
         .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); }
@@ -165,7 +164,6 @@
     <div class="bg-glow glow-2"></div>
 
     <div class="app-container">
-        <!-- Form Auth -->
         <div id="auth-view" class="view active">
             <div class="auth-card">
                 <div class="auth-header">
@@ -199,12 +197,11 @@
                 </div>
 
                 <button id="auth-btn" class="btn-primary">Masuk ke Sistem</button>
-                <p id="toggle-text" class="toggle-text">Belum punya akses? <span id="toggle-auth">Daftar di sini</span></p>
+                <p id="toggle-text" class="toggle-text">Belum punya akses? <button id="toggle-auth" type="button">Daftar di sini</button></p>
                 <p id="auth-error" class="error-message"></p>
             </div>
         </div>
 
-        <!-- Vault View -->
         <div id="vault-view" class="view">
             <header class="dashboard-header">
                 <div class="header-left">
@@ -269,9 +266,8 @@
 
     <script>
         // === KONFIGURASI SUPABASE ===
-        // Ganti dengan URL dan Anon Key dari project Supabase Anda
-        const SUPABASE_URL = 'https://dhvjoubaolutcejrvrsq.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodmpvdWJhb2x1dGNlanJ2cnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzY0OTQsImV4cCI6MjEwNTkxMjQ5NH0.ZAMdDQn0SzgERT5ftAuowts373TTzHlg30fidcfUGAs';
+        const SUPABASE_URL = 'https://dhvjoubaolutcejrvrsq.supabase.co'; // GANTI INI
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodmpvdWJhb2x1dGNlanJ2cnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzY0OTQsImV4cCI6MjEwNTkxMjQ5NH0.ZAMdDQn0SzgERT5ftAuowts373TTzHlg30fidcfUGAs'; // GANTI INI
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let isLogin = true;
@@ -281,7 +277,6 @@
         const vaultView = document.getElementById('vault-view');
         const authBtn = document.getElementById('auth-btn');
         const toggleText = document.getElementById('toggle-text');
-        const toggleAuth = document.getElementById('toggle-auth');
         const authError = document.getElementById('auth-error');
 
         function toggleAuthView() {
@@ -291,15 +286,21 @@
                 document.querySelector('.auth-header h1').innerText = 'Brankas Siber';
                 document.querySelector('.subtitle').innerText = 'Protokol Keamanan Data Diaktifkan';
                 authBtn.innerHTML = 'Masuk ke Sistem';
-                toggleText.innerHTML = 'Belum punya akses? <span id="toggle-auth">Daftar di sini</span>';
+                toggleText.innerHTML = 'Belum punya akses? <button id="toggle-auth" type="button">Daftar di sini</button>';
             } else {
                 document.querySelector('.auth-header h1').innerText = 'Identitas Baru';
                 document.querySelector('.subtitle').innerText = 'Buat Koneksi Aman';
                 authBtn.innerHTML = 'Buat Akun Sekarang';
-                toggleText.innerHTML = 'Sudah punya akses? <span id="toggle-auth">Masuk di sini</span>';
+                toggleText.innerHTML = 'Sudah punya akses? <button id="toggle-auth" type="button">Masuk di sini</button>';
             }
-            document.getElementById('toggle-auth').addEventListener('click', toggleAuthView);
         }
+
+        // Event Delegation: Memastikan tombol di dalam teks selalu bisa diklik walau diganti
+        toggleText.addEventListener('click', function(e) {
+            if (e.target && e.target.id === 'toggle-auth') {
+                toggleAuthView();
+            }
+        });
 
         async function handleAuth() {
             const email = document.getElementById('email').value;
@@ -308,6 +309,7 @@
 
             if (!email || !password || !masterPass) {
                 authError.innerText = 'SISTEM ERROR: Semua kolom wajib diisi.';
+                authError.style.color = 'var(--neon-pink)';
                 authError.style.display = 'block';
                 return;
             }
@@ -320,37 +322,31 @@
                     if (error) throw error;
                     loadVault();
                 } else {
-                    // Proses Daftar Akun
                     const { data, error } = await supabase.auth.signUp({ email, password });
                     if (error) throw error;
                     
-                    // Cek apakah verifikasi email diaktifkan di Supabase
-                    if (data.user && !data.session) {
-                        authError.innerText = 'Pendaftaran berhasil! Silakan verifikasi email Anda, lalu login.';
+                    if (data.user && data.session) {
+                        authError.innerText = 'Pendaftaran berhasil! Memuat sistem...';
                         authError.style.color = 'var(--neon-cyan)';
                         authError.style.display = 'block';
-                        alert('Pendaftaran berhasil! Silakan verifikasi email Anda, lalu login.');
-                        toggleAuthView(); // Kembali ke mode login
+                        setTimeout(() => loadVault(), 1500);
                     } else {
-                        // Jika verifikasi email dimatikan, langsung masuk
-                        authError.innerText = 'Pendaftaran berhasil! Silakan masuk.';
+                        authError.innerText = 'Pendaftaran berhasil! Silakan login dengan akun tersebut.';
                         authError.style.color = 'var(--neon-cyan)';
                         authError.style.display = 'block';
-                        alert('Pendaftaran berhasil! Silakan masuk dengan akun tersebut.');
                         toggleAuthView(); // Kembali ke mode login
                     }
                 }
             } catch (error) {
-                // Tangkap error dari Supabase dan tampilkan dalam Bahasa Indonesia
                 let errMsg = error.message;
-                if (errMsg.includes("User already registered")) errMsg = "Pengguna dengan email ini sudah terdaftar.";
-                else if (errMsg.includes("Password should be at least 6 characters")) errMsg = "Password akun minimal harus 6 karakter.";
+                if (errMsg.includes("User already registered")) errMsg = "Email ini sudah terdaftar.";
+                else if (errMsg.includes("Password should be at least 6 characters")) errMsg = "Password akun minimal 6 karakter.";
                 else if (errMsg.includes("Invalid login credentials")) errMsg = "Email atau Password Akun salah.";
                 
                 authError.innerText = `AKSES DITOLAK: ${errMsg}`;
                 authError.style.color = 'var(--neon-pink)';
                 authError.style.display = 'block';
-                console.error("Detail Error Supabase:", error);
+                console.error("Detail Error:", error);
             }
         }
 
@@ -388,9 +384,7 @@
 
                     vaultList.innerHTML += `
                         <div class="vault-item">
-                            <div class="vault-icon">
-                                <i class="${iconClass}"></i>
-                            </div>
+                            <div class="vault-icon"><i class="${iconClass}"></i></div>
                             <div class="vault-content">
                                 <h4>${item.label}</h4>
                                 <p><i class="fas fa-at"></i> ${item.email}</p>
@@ -461,7 +455,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            document.getElementById('toggle-auth').addEventListener('click', toggleAuthView);
             authBtn.addEventListener('click', handleAuth);
             document.getElementById('add-btn').addEventListener('click', addData);
             document.getElementById('logout-btn').addEventListener('click', logout);
