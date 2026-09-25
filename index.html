@@ -122,7 +122,7 @@
         .btn-ghost:hover { background: rgba(255, 0, 85, 0.1); box-shadow: 0 0 10px rgba(255, 0, 85, 0.3); }
 
         .toggle-text { text-align: center; margin-top: 24px; color: var(--text-muted); font-size: 14px; letter-spacing: 0.5px; }
-        .toggle-text button { /* Styling untuk tombol daftar di sini */
+        .toggle-text button { 
             background: none; border: none; color: var(--neon-purple); cursor: pointer; font-weight: 600;
             text-shadow: 0 0 5px var(--neon-purple); font-family: 'Rajdhani', sans-serif; font-size: 14px;
             letter-spacing: 0.5px; text-decoration: underline;
@@ -266,8 +266,8 @@
 
     <script>
         // === KONFIGURASI SUPABASE ===
-        const SUPABASE_URL = 'https://dhvjoubaolutcejrvrsq.supabase.co'; // GANTI INI
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodmpvdWJhb2x1dGNlanJ2cnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzY0OTQsImV4cCI6MjEwNTkxMjQ5NH0.ZAMdDQn0SzgERT5ftAuowts373TTzHlg30fidcfUGAs'; // GANTI INI
+        const SUPABASE_URL = 'https://dhvjoubaolutcejrvrsq.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodmpvdWJhb2x1dGNlanJ2cnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzY0OTQsImV4cCI6MjEwNTkxMjQ5NH0.ZAMdDQn0SzgERT5ftAuowts373TTzHlg30fidcfUGAs'; 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let isLogin = true;
@@ -379,7 +379,7 @@
                 decryptedData.forEach(item => {
                     let iconClass = 'fa-globe';
                     if(item.category === 'GitHub') iconClass = 'fa-brands fa-github';
-                    else if(item.category === 'Supabase') iconClass = 'fa-brands fa-supabase';
+                    else if(item.category === 'Supabase') iconClass = 'fa-solid fa-database'; // Ikon Supabase diganti ke database agar tampil
                     else if(item.category === 'Netlify') iconClass = 'fa-brands fa-netlify';
 
                     vaultList.innerHTML += `
@@ -459,6 +459,7 @@
             document.getElementById('add-btn').addEventListener('click', addData);
             document.getElementById('logout-btn').addEventListener('click', logout);
 
+            // Deteksi otomatis apakah user sebelumnya sudah login
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 authView.classList.add('active');
