@@ -2,193 +2,367 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Brankas Cyber</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brankas Cyber - Pro Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  /* ===== Reset & Base ===== */
+  :root {
+    --bg-main: #0b0f19;
+    --bg-sidebar: #0f1421;
+    --bg-card: #161b2b;
+    --bg-input: #0f1421;
+    --border: #2a3344;
+    --accent: #00a8ff;
+    --accent-glow: rgba(0, 168, 255, 0.3);
+    --success: #00ffcc;
+    --danger: #ff4d4d;
+    --text-main: #e4e6eb;
+    --text-muted: #8b9bb4;
+    --text-dim: #5a6478;
+    --radius: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0b0f19; color: #e4e6eb; min-height: 100vh;
-    display: flex; justify-content: center;
-    background-image: linear-gradient(rgba(18, 22, 34, 0.95), rgba(11, 15, 25, 0.98)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
-    background-size: cover; background-position: center;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow: hidden;
   }
-  .app { width: 100%; max-width: 900px; padding: 20px; }
-  header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(22, 27, 43, 0.8); backdrop-filter: blur(10px); border: 1px solid #2a3344; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
-  header b { font-size: 1.2rem; color: #00ffcc; letter-spacing: 0.5px; }
-  header small { display: block; color: #8b9bb4; font-size: 0.8rem; margin-top: 2px; }
-  h1, h2, h3 { color: #ffffff; }
-  .muted { color: #8b9bb4; }
-  .tiny { font-size: 0.75rem; color: #6c7a92; margin-top: 15px; }
-  .tiny code { background: #1a2033; padding: 2px 6px; border-radius: 4px; color: #ff4d4d; }
-  .hidden { display: none !important; }
+
+  /* === LOGIN VIEW === */
+  #authView {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 20px;
+    background: radial-gradient(circle at top right, rgba(0, 168, 255, 0.1), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(0, 255, 204, 0.1), transparent 40%),
+                var(--bg-main);
+  }
+  .auth-card {
+    width: 100%; max-width: 420px;
+    background: rgba(22, 27, 43, 0.6); backdrop-filter: blur(20px);
+    border: 1px solid var(--border); border-radius: 20px;
+    padding: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+  .auth-logo { font-size: 2.5rem; margin-bottom: 10px; }
+  .auth-card h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .auth-card h1 span { color: var(--accent); }
+  .auth-card .sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px; }
   
-  /* ===== Auth & Cards ===== */
-  .auth { max-width: 450px; margin: 40px auto; padding: 30px; text-align: center; }
-  .card { background: rgba(22, 27, 43, 0.9); border: 1px solid #2a3344; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
-  .auth h1 { margin-bottom: 10px; font-size: 2rem; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(90deg, #00ffcc, #00a8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .auth p.muted { margin-bottom: 20px; }
-  .tabs { display: flex; background: #1a2033; border-radius: 8px; padding: 5px; margin-bottom: 20px; }
-  .tabs button { flex: 1; padding: 10px; background: transparent; border: none; color: #8b9bb4; cursor: pointer; border-radius: 6px; transition: all 0.3s ease; font-weight: bold; }
-  .tabs button.active { background: #00ffcc; color: #0b0f19; }
+  .tabs { display: flex; background: var(--bg-input); border-radius: var(--radius); padding: 4px; margin-bottom: 24px; border: 1px solid var(--border); }
+  .tabs button { flex: 1; padding: 10px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: var(--transition); }
+  .tabs button.active { background: var(--accent); color: #fff; box-shadow: 0 4px 10px var(--accent-glow); }
 
-  /* ===== Forms ===== */
-  input, select, textarea { width: 100%; padding: 12px 15px; background: #0f1421; border: 1px solid #2a3344; border-radius: 8px; color: #e4e6eb; margin-bottom: 15px; transition: all 0.3s ease; font-family: inherit; }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: #00a8ff; box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2); }
-  label { display: block; font-size: 0.9rem; color: #b0b8c8; margin-bottom: 5px; }
-  textarea { resize: vertical; min-height: 80px; }
-
-  /* ===== Buttons ===== */
-  button { padding: 12px 20px; background: #00a8ff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; font-family: inherit; }
-  button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3); }
-  button.secondary { background: #2a3344; color: #b0b8c8; }
-  button.secondary:hover { background: #364056; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-  button.danger { background: #ff4d4d; }
-  button#logoutBtn:hover { box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3); }
-  .passrow { display: flex; gap: 10px; }
-  .passrow input { margin-bottom: 0; }
-  .passrow button { padding: 12px 15px; background: #1a2033; }
-
-  /* ===== Vault ===== */
-  .welcome { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .welcome h2 { font-size: 1.1rem; font-weight: normal; }
-  .toolbar { display: flex; gap: 15px; margin-bottom: 20px; }
-  .toolbar input, .toolbar select { margin-bottom: 0; }
-  .toolbar input { flex: 2; } .toolbar select { flex: 1; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-  .item-card { background: rgba(22, 27, 43, 0.8); border: 1px solid #2a3344; border-radius: 12px; padding: 15px; transition: all 0.3s ease; position: relative; }
-  .item-card:hover { border-color: #00a8ff; transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); }
-  .item-card h3 { font-size: 1rem; margin-bottom: 5px; padding-right: 80px; /* Space for actions */ }
-  .item-card .cat { display: inline-block; font-size: 0.7rem; padding: 3px 8px; background: #1a2033; color: #00ffcc; border-radius: 4px; margin-bottom: 10px; text-transform: uppercase; }
-  .item-card p { font-size: 0.85rem; color: #b0b8c8; word-break: break-all; }
-  .item-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; }
-  .item-actions button { padding: 5px 10px; background: transparent; border: 1px solid #2a3344; color: #8b9bb4; font-size: 0.8rem; }
-  .item-actions button:hover { border-color: #00a8ff; color: #00a8ff; transform: none; box-shadow: none; }
-  .item-actions button.del:hover { border-color: #ff4d4d; color: #ff4d4d; }
-
-  /* ===== Modal ===== */
-  .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-  .modalBox { background: #161b2b; border: 1px solid #2a3344; border-radius: 16px; width: 100%; max-width: 500px; padding: 25px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
-  .modalHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .modalHead h3 { color: #00ffcc; }
-  #closeModal { background: none; color: #8b9bb4; font-size: 1.5rem; padding: 0; line-height: 1; }
-  #closeModal:hover { transform: none; box-shadow: none; color: #ff4d4d; }
-  .actions { display: flex; gap: 10px; margin-top: 10px; }
-  .actions button { flex: 1; }
-
-  .msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 10px; min-height: 1.2rem; text-align: center; }
-  .empty { text-align: center; color: #6c7a92; margin-top: 50px; font-style: italic; }
+  .form-group { margin-bottom: 20px; text-align: left; }
+  .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+  .input-wrap { position: relative; }
+  .input-wrap input { width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main); font-size: 0.95rem; transition: var(--transition); font-family: inherit; }
+  .input-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   
-  @media (max-width: 600px) { .welcome { flex-direction: column; align-items: flex-start; gap: 15px; } .toolbar { flex-direction: column; } }
+  .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), #0077cc); color: #fff; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; transition: var(--transition); margin-top: 10px; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* === DASHBOARD LAYOUT === */
+  .dashboard { display: flex; height: 100vh; }
+  
+  /* Sidebar */
+  .sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; transition: var(--transition); }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .sidebar-header b { font-size: 1.2rem; color: var(--success); }
+  .sidebar-nav { flex: 1; padding: 20px 15px; overflow-y: auto; }
+  .nav-section { margin-bottom: 25px; }
+  .nav-title { font-size: 0.7rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 10px; padding-left: 10px; }
+  .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; color: var(--text-muted); cursor: pointer; margin-bottom: 4px; font-size: 0.9rem; transition: var(--transition); border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
+  .nav-item.active { background: rgba(0, 168, 255, 0.1); color: var(--accent); font-weight: 600; }
+  .nav-item svg { width: 18px; height: 18px; }
+  
+  .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); }
+  .user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+  .user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent), var(--success)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
+  .user-details { flex: 1; overflow: hidden; }
+  .user-details small { display: block; color: var(--text-dim); font-size: 0.7rem; }
+  .user-details p { color: var(--text-main); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btn-logout { width: 100%; padding: 8px; background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid rgba(255, 77, 77, 0.2); border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: var(--transition); }
+  .btn-logout:hover { background: var(--danger); color: #fff; }
+
+  /* Main Content */
+  .main-content { flex: 1; overflow-y: auto; padding: 30px 40px; background: var(--bg-main); }
+  .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+  .main-header h2 { font-size: 1.8rem; font-weight: 700; }
+  
+  /* Toolbar */
+  .toolbar { display: flex; gap: 15px; margin-bottom: 25px; }
+  .search-box { flex: 1; position: relative; }
+  .search-box input { width: 100%; padding: 12px 16px 12px 45px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-family: inherit; }
+  .search-box input:focus { outline: none; border-color: var(--accent); }
+  .search-box svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--text-dim); }
+  
+  .btn-add { padding: 12px 20px; background: linear-gradient(135deg, var(--accent), #0077cc); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: var(--transition); }
+  .btn-add:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--accent-glow); }
+
+  /* Grid Layout */
+  .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  
+  .vault-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: var(--transition); position: relative; }
+  .vault-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  
+  .card-top { display: flex; align-items: flex-start; margin-bottom: 15px; gap: 15px; }
+  .card-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; background: rgba(255,255,255,0.05); }
+  .card-info { flex: 1; }
+  .card-info h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; word-break: break-all; }
+  .badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+  .badge.Login { background: rgba(0, 168, 255, 0.1); color: var(--accent); }
+  .badge.Catatan { background: rgba(255, 200, 0, 0.1); color: #ffc800; }
+  .badge.Kartu { background: rgba(0, 255, 204, 0.1); color: var(--success); }
+  .badge.Lainnya { background: rgba(255, 77, 77, 0.1); color: var(--danger); }
+
+  .card-field { background: var(--bg-input); border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; transition: var(--transition); }
+  .card-field:hover { border-color: var(--border); }
+  .field-label { font-size: 0.7rem; color: var(--text-dim); width: 50px; text-transform: uppercase; }
+  .field-value { flex: 1; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .field-actions { display: flex; gap: 5px; }
+  .btn-icon { background: transparent; border: none; color: var(--text-dim); cursor: pointer; padding: 4px; border-radius: 4px; transition: var(--transition); }
+  .btn-icon:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+
+  .card-footer { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
+  .btn-action { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 6px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: var(--transition); }
+  .btn-action:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-action.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* Empty State */
+  .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); }
+  .empty-state svg { width: 80px; height: 80px; margin-bottom: 20px; color: var(--text-dim); }
+
+  /* Skeleton Loader */
+  .skeleton-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; height: 180px; }
+  .skeleton-line { height: 12px; background: linear-gradient(90deg, var(--bg-input) 25%, var(--border) 50%, var(--bg-input) 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 4px; margin-bottom: 10px; }
+  @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 500px; padding: 30px; transform: translateY(20px); transition: transform 0.3s; max-height: 90vh; overflow-y: auto; }
+  .modal-overlay.show .modal-content { transform: translateY(0); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+  .modal-header h3 { font-size: 1.3rem; font-weight: 700; }
+  .btn-close { background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1; }
+  .btn-close:hover { color: var(--danger); }
+
+  /* Toast */
+  .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+  .toast { background: var(--bg-card); border-left: 4px solid var(--success); padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 12px; min-width: 250px; animation: slideIn 0.3s ease-out; }
+  .toast.error { border-left-color: var(--danger); }
+  .toast p { font-size: 0.9rem; }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -260px; z-index: 100; height: 100vh; }
+    .sidebar.open { left: 0; }
+    .main-content { padding: 20px; }
+    .btn-menu { display: block !important; }
+  }
+  .btn-menu { display: none; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 10px; border-radius: 8px; cursor: pointer; margin-right: 15px; }
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div><b>🛡️ Brankas Cyber</b><small>Brankas digital pribadi</small></div>
-    <button id="logoutBtn" class="danger hidden">Keluar</button>
-  </header>
 
-  <main>
-    <section id="authView" class="card auth">
-      <h1>Brankas Cyber</h1>
-      <p class="muted">Simpan data penting Anda dengan kontrol akses per akun.</p>
-      <div class="tabs">
-        <button id="loginTab" class="active">Masuk</button>
-        <button id="registerTab">Daftar</button>
+<!-- LOGIN VIEW -->
+<div id="authView">
+  <div class="auth-card">
+    <div class="auth-logo">🛡️</div>
+    <h1>Brankas<span> Cyber</span></h1>
+    <p class="sub">Keamanan digital tingkat lanjut untuk data pribadi Anda.</p>
+    
+    <div class="tabs">
+      <button id="loginTab" class="active">Masuk</button>
+      <button id="registerTab">Daftar</button>
+    </div>
+    
+    <form id="authForm">
+      <div class="form-group">
+        <label>Alamat Email</label>
+        <div class="input-wrap">
+          <input id="email" type="email" placeholder="nama@email.com" required>
+        </div>
       </div>
-      <form id="authForm">
-        <input id="email" type="email" placeholder="Email" required>
-        <input id="password" type="password" placeholder="Password (min 8 karakter)" minlength="8" required>
-        <button id="authSubmit" type="submit">Masuk</button>
-      </form>
-      <p id="authMsg" class="msg"></p>
-    </section>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input id="password" type="password" placeholder="Minimal 8 karakter" minlength="8" required>
+        </div>
+      </div>
+      <button type="submit" id="authSubmit" class="btn-primary">Masuk ke Brankas</button>
+      <p id="authMsg" style="color: var(--danger); font-size: 0.85rem; margin-top: 15px; text-align: center;"></p>
+    </form>
+  </div>
+</div>
 
-    <section id="vaultView" class="hidden">
-      <div class="welcome">
-        <div><span class="muted">Akun</span><h2 id="userEmail">-</h2></div>
-        <button id="addBtn">+ Tambah Rahasia</button>
+<!-- DASHBOARD VIEW -->
+<div id="dashboardView" class="dashboard" style="display: none;">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <b>🛡️ Brankas</b>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-title">Filter Data</div>
+        <button class="nav-item active" data-filter="">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+          Semua Item
+        </button>
+        <button class="nav-item" data-filter="Login">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          Login
+        </button>
+        <button class="nav-item" data-filter="Kartu">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+          Kartu
+        </button>
+        <button class="nav-item" data-filter="Catatan">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Catatan
+        </button>
+        <button class="nav-item" data-filter="Lainnya">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+          Lainnya
+        </button>
       </div>
-      <div class="toolbar">
-        <input id="search" placeholder="Cari judul atau username...">
-        <select id="categoryFilter">
-          <option value="">Semua kategori</option>
-          <option>Login</option><option>Catatan</option><option>Kartu</option><option>Lainnya</option>
-        </select>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-details">
+          <small>Login sebagai</small>
+          <p id="userEmail">user@email.com</p>
+        </div>
       </div>
-      <div id="items" class="grid"></div>
-      <p id="empty" class="empty hidden">Belum ada data di brankas.</p>
-    </section>
+      <button id="logoutBtn" class="btn-logout">Keluar dari Akun</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="main-header">
+      <div style="display: flex; align-items: center;">
+        <button class="btn-menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <h2 id="pageTitle">Semua Item</h2>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-box">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input id="searchInput" type="text" placeholder="Cari judul, username, atau kata kunci...">
+      </div>
+      <button id="addBtn" class="btn-add">
+        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        Tambah Data
+      </button>
+    </div>
+
+    <div id="itemsGrid" class="items-grid"></div>
   </main>
 </div>
 
-<div id="modal" class="modal hidden">
- <div class="modalBox">
-  <div class="modalHead"><h3 id="modalTitle">Tambah Rahasia</h3><button id="closeModal">×</button></div>
-  <form id="itemForm">
-   <input type="hidden" id="itemId">
-   <label>Judul<input id="title" required maxlength="120" placeholder="Contoh: Email utama"></label>
-   <label>Kategori<select id="category"><option>Login</option><option>Catatan</option><option>Kartu</option><option>Lainnya</option></select></label>
-   <label>Username / Identitas<input id="username" maxlength="160" placeholder="username atau email"></label>
-   <label>Password / Nilai rahasia<div class="passrow"><input id="secret" type="password" maxlength="500" placeholder="********"><button type="button" id="toggleSecret">👁</button></div></label>
-   <label>Catatan<textarea id="notes" maxlength="5000" placeholder="Tambahkan catatan tambahan..."></textarea></label>
-   <div class="actions"><button type="button" class="secondary" id="cancelBtn">Batal</button><button type="submit">Simpan</button></div>
-  </form>
-  <p id="itemMsg" class="msg"></p>
- </div>
+<!-- MODAL -->
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Tambah Rahasia Baru</h3>
+      <button class="btn-close" id="closeModal">×</button>
+    </div>
+    <form id="itemForm">
+      <input type="hidden" id="itemId">
+      <div class="form-group">
+        <label>Judul</label>
+        <input id="title" class="input-wrap" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);" required maxlength="120" placeholder="Contoh: Email Utama">
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="category" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);">
+          <option>Login</option><option>Catatan</option><option>Kartu</option><option>Lainnya</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Username / Identitas</label>
+        <input id="username" class="input-wrap" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);" maxlength="160" placeholder="username atau email">
+      </div>
+      <div class="form-group">
+        <label>Password / Nilai Rahasia</label>
+        <div style="display: flex; gap: 10px;">
+          <input id="secret" type="password" style="flex: 1; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);" maxlength="500" placeholder="********">
+          <button type="button" id="toggleSecret" class="btn-icon" style="background: var(--bg-input); border: 1px solid var(--border); padding: 0 15px; border-radius: var(--radius); font-size: 1.2rem;">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Catatan Tambahan</label>
+        <textarea id="notes" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main); min-height: 80px; resize: vertical;" maxlength="5000" placeholder="Tambahkan catatan..."></textarea>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button type="button" class="btn-action" id="cancelBtn" style="flex: 1; padding: 12px;">Batal</button>
+        <button type="submit" id="saveBtn" class="btn-primary" style="flex: 2; margin-top: 0; padding: 12px;">Simpan Data</button>
+      </div>
+    </form>
+  </div>
 </div>
 
+<!-- TOAST CONTAINER -->
+<div id="toastContainer" class="toast-container"></div>
+
 <script>
-  // =======================================================
-  // KONFIGURASI SUPABASE (GANTI DENGAN MILIK ANDA)
-  // =======================================================
+  // KONFIGURASI SUPABASE
   const SUPABASE_URL = "https://dhvjoubaolutcejrvrsq.supabase.co"; 
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodmpvdWJhb2x1dGNlanJ2cnNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMzY0OTQsImV4cCI6MjEwNTkxMjQ5NH0.ZAMdDQn0SzgERT5ftAuowts373TTzHlg30fidcfUGAs";
   
+  if (SUPABASE_URL.includes("MASUKKAN_URL_PROYEK_ANDA")) {
+    alert("HARAP BACA: Anda belum mengisi URL dan Anon Key Supabase di dalam kode script!");
+  }
+
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   let currentUser = null;
   let vaultData = [];
+  let currentFilter = "";
 
-  // =======================================================
-  // DOM ELEMENTS
-  // =======================================================
+  // DOM
   const authView = document.getElementById('authView');
-  const vaultView = document.getElementById('vaultView');
+  const dashboardView = document.getElementById('dashboardView');
   const authForm = document.getElementById('authForm');
   const authMsg = document.getElementById('authMsg');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const userEmailEl = document.getElementById('userEmail');
-  
-  const itemsGrid = document.getElementById('items');
-  const emptyState = document.getElementById('empty');
-  const searchInput = document.getElementById('search');
-  const categoryFilter = document.getElementById('categoryFilter');
+  const itemsGrid = document.getElementById('itemsGrid');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const toastContainer = document.getElementById('toastContainer');
 
-  const modal = document.getElementById('modal');
-  const itemForm = document.getElementById('itemForm');
-  const itemMsg = document.getElementById('itemMsg');
+  // TOAST
+  function showToast(msg, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${isError ? 'error' : ''}`;
+    toast.innerHTML = `<p>${msg}</p>`;
+    toastContainer.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+  }
 
-  // =======================================================
-  // AUTENTIKASI (LOGIN / REGISTER / LOGOUT)
-  // =======================================================
+  // AUTH
   let isLogin = true;
-
   document.getElementById('loginTab').addEventListener('click', () => {
     isLogin = true;
     document.getElementById('loginTab').classList.add('active');
     document.getElementById('registerTab').classList.remove('active');
-    document.getElementById('authSubmit').innerText = 'Masuk';
+    document.getElementById('authSubmit').innerText = 'Masuk ke Brankas';
     authMsg.textContent = '';
   });
-
   document.getElementById('registerTab').addEventListener('click', () => {
     isLogin = false;
     document.getElementById('registerTab').classList.add('active');
     document.getElementById('loginTab').classList.remove('active');
-    document.getElementById('authSubmit').innerText = 'Daftar';
+    document.getElementById('authSubmit').innerText = 'Daftar Akun Baru';
     authMsg.textContent = '';
   });
 
@@ -196,113 +370,153 @@
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    authMsg.textContent = '';
-    authSubmit.disabled = true;
-    authSubmit.innerText = "Memproses...";
+    const submitBtn = document.getElementById('authSubmit');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Memproses...";
 
     try {
       if (isLogin) {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        const { error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { data, error } = await sb.auth.signUp({ email, password });
+        const { error } = await sb.auth.signUp({ email, password });
         if (error) throw error;
-        authMsg.style.color = '#00ffcc';
-        authMsg.textContent = 'Pendaftaran berhasil! Silakan cek email untuk verifikasi (jika diaktifkan) lalu login.';
+        showToast("Pendaftaran berhasil! Silakan login.");
+        document.getElementById('loginTab').click();
       }
     } catch (error) {
-      authMsg.style.color = '#ff4d4d';
       authMsg.textContent = "Error: " + error.message;
     } finally {
-      authSubmit.disabled = false;
-      authSubmit.innerText = isLogin ? 'Masuk' : 'Daftar';
+      submitBtn.disabled = false;
+      submitBtn.innerText = isLogin ? 'Masuk ke Brankas' : 'Daftar Akun Baru';
     }
   });
 
-  logoutBtn.addEventListener('click', async () => {
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
     await sb.auth.signOut();
+    showToast("Anda telah keluar.");
   });
 
-  // Cek status login saat halaman dimuat
   sb.auth.onAuthStateChange(async (event, session) => {
     if (session) {
       currentUser = session.user;
-      authView.classList.add('hidden');
-      vaultView.classList.remove('hidden');
-      logoutBtn.classList.remove('hidden');
-      userEmailEl.textContent = currentUser.email;
+      authView.style.display = 'none';
+      dashboardView.style.display = 'flex';
+      document.getElementById('userEmail').textContent = currentUser.email;
+      document.getElementById('userAvatar').innerText = currentUser.email.charAt(0).toUpperCase();
       await fetchVaultItems();
     } else {
       currentUser = null;
-      vaultView.classList.add('hidden');
-      authView.classList.remove('hidden');
-      logoutBtn.classList.add('hidden');
+      authView.style.display = 'flex';
+      dashboardView.style.display = 'none';
       authForm.reset();
     }
   });
 
-  // =======================================================
-  // CRUD DATABASE (FETCH, ADD, EDIT, DELETE)
-  // =======================================================
+  // CRUD
   async function fetchVaultItems() {
-    itemsGrid.innerHTML = '<p class="muted" style="text-align:center; width:100%;">Memuat data...</p>';
-    const { data, error } = await sb.from('vault_items').select('*').order('created_at', { ascending: false });
+    itemsGrid.innerHTML = `
+      <div class="skeleton-card"><div class="skeleton-line" style="width: 40%"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+      <div class="skeleton-card"><div class="skeleton-line" style="width: 50%"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+      <div class="skeleton-card"><div class="skeleton-line" style="width: 30%"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+    `;
     
+    const { data, error } = await sb.from('vault_items').select('*').order('created_at', { ascending: false });
     if (error) {
-      itemsGrid.innerHTML = `<p class="msg" style="text-align:center; width:100%;">Gagal memuat: ${error.message}</p>`;
+      itemsGrid.innerHTML = `<p style="color: var(--danger)">Gagal memuat data: ${error.message}</p>`;
       return;
     }
-
     vaultData = data || [];
     renderItems();
   }
 
   function renderItems() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const filterCat = categoryFilter.value;
-
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
     let filtered = vaultData.filter(item => {
       const matchSearch = (item.title?.toLowerCase().includes(searchTerm) || item.username?.toLowerCase().includes(searchTerm));
-      const matchCat = (filterCat === '' || item.category === filterCat);
+      const matchCat = (currentFilter === '' || item.category === currentFilter);
       return matchSearch && matchCat;
     });
 
     itemsGrid.innerHTML = '';
     if (filtered.length === 0) {
-      emptyState.classList.remove('hidden');
-    } else {
-      emptyState.classList.add('hidden');
-      filtered.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.innerHTML = `
-          <div class="item-actions">
-            <button class="edit-btn" data-id="${item.id}">Edit</button>
-            <button class="del-btn" data-id="${item.id}">Hapus</button>
-          </div>
-          <span class="cat">${item.category || 'Lainnya'}</span>
-          <h3>${escapeHtml(item.title)}</h3>
-          <p>${escapeHtml(item.username || '')}</p>
-        `;
-        itemsGrid.appendChild(card);
-      });
-
-      document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => openModal(e.target.dataset.id)));
-      document.querySelectorAll('.del-btn').forEach(btn => btn.addEventListener('click', (e) => deleteItem(e.target.dataset.id)));
+      itemsGrid.innerHTML = `
+        <div class="empty-state">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Tidak Ada Data Ditemukan</h3>
+          <p>Mulai dengan menambahkan rahasia pertama Anda atau ubah kata kunci pencarian.</p>
+        </div>
+      `;
+      return;
     }
+
+    const iconMap = { 'Login': '🔐', 'Kartu': '💳', 'Catatan': '📝', 'Lainnya': '📦' };
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'vault-card';
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="card-icon">${iconMap[item.category] || '📦'}</div>
+          <div class="card-info">
+            <h3>${escapeHtml(item.title)}</h3>
+            <span class="badge ${item.category}">${item.category || 'Lainnya'}</span>
+          </div>
+        </div>
+        
+        ${item.username ? `
+          <div class="card-field">
+            <span class="field-label">User</span>
+            <span class="field-value" id="user-${item.id}">${escapeHtml(item.username)}</span>
+            <div class="field-actions">
+              <button class="btn-icon" onclick="copyText('user-${item.id}', 'Username disalin!')" title="Salin">📋</button>
+            </div>
+          </div>
+        ` : ''}
+
+        ${item.secret ? `
+          <div class="card-field">
+            <span class="field-label">Pass</span>
+            <span class="field-value" id="secret-${item.id}" data-secret="${escapeHtml(item.secret)}" style="font-family: monospace;">••••••••••</span>
+            <div class="field-actions">
+              <button class="btn-icon" onclick="toggleSecretVisibility('secret-${item.id}', this)" title="Lihat">👁</button>
+              <button class="btn-icon" onclick="copySecret('secret-${item.id}')" title="Salin">📋</button>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="card-footer">
+          <button class="btn-action" onclick="openModal('${item.id}')">✏️ Edit</button>
+          <button class="btn-action danger" onclick="deleteItem('${item.id}')">🗑️ Hapus</button>
+        </div>
+      `;
+      itemsGrid.appendChild(card);
+    });
   }
 
-  searchInput.addEventListener('input', renderItems);
-  categoryFilter.addEventListener('change', renderItems);
+  // NAV FILTER
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      document.getElementById('pageTitle').innerText = currentFilter === '' ? 'Semua Item' : currentFilter;
+      renderItems();
+    });
+  });
 
-  // MODAL & FORM HANDLING
+  document.getElementById('searchInput').addEventListener('input', renderItems);
+
+  // MODAL
   document.getElementById('addBtn').addEventListener('click', () => openModal(null));
-  document.getElementById('closeModal').addEventListener('click', () => modal.classList.add('hidden'));
-  document.getElementById('cancelBtn').addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('closeModal').addEventListener('click', () => modalOverlay.classList.remove('show'));
+  document.getElementById('cancelBtn').addEventListener('click', () => modalOverlay.classList.remove('show'));
+  modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('show'); });
 
   function openModal(id) {
-    itemForm.reset();
-    itemMsg.textContent = '';
+    document.getElementById('itemForm').reset();
+    document.getElementById('itemMsg').textContent = '';
     
     if (id) {
       const item = vaultData.find(i => i.id == id);
@@ -315,15 +529,17 @@
       document.getElementById('secret').value = item.secret || '';
       document.getElementById('notes').value = item.notes || '';
     } else {
-      document.getElementById('modalTitle').innerText = 'Tambah Rahasia';
+      document.getElementById('modalTitle').innerText = 'Tambah Rahasia Baru';
       document.getElementById('itemId').value = '';
     }
-    modal.classList.remove('hidden');
+    modalOverlay.classList.add('show');
   }
 
-  itemForm.addEventListener('submit', async (e) => {
+  document.getElementById('itemForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    itemMsg.textContent = '';
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerText = "Menyimpan...";
     
     const id = document.getElementById('itemId').value;
     const payload = {
@@ -339,14 +555,19 @@
       if (id) {
         const { error } = await sb.from('vault_items').update(payload).eq('id', id);
         if (error) throw error;
+        showToast("Data berhasil diperbarui.");
       } else {
         const { error } = await sb.from('vault_items').insert([payload]);
         if (error) throw error;
+        showToast("Data baru ditambahkan ke brankas.");
       }
-      modal.classList.add('hidden');
+      modalOverlay.classList.remove('show');
       await fetchVaultItems();
     } catch (error) {
-      itemMsg.textContent = "Gagal menyimpan: " + error.message;
+      alert("Gagal menyimpan: " + error.message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerText = "Simpan Data";
     }
   });
 
@@ -354,23 +575,44 @@
     if (!confirm("Yakin ingin menghapus data ini secara permanen?")) return;
     const { error } = await sb.from('vault_items').delete().eq('id', id);
     if (error) {
-      alert("Gagal menghapus: " + error.message);
+      showToast("Gagal menghapus: " + error.message, true);
     } else {
+      showToast("Data berhasil dihapus.");
       await fetchVaultItems();
     }
   }
 
-  // Toggle Password Visibility
+  // UTILITIES
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  function copyText(elementId, message) {
+    const text = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(text).then(() => showToast(message)).catch(() => showToast("Gagal menyalin", true));
+  }
+
+  function copySecret(elementId) {
+    const text = document.getElementById(elementId).getAttribute('data-secret');
+    navigator.clipboard.writeText(text).then(() => showToast("Password disalin!")).catch(() => showToast("Gagal menyalin", true));
+  }
+
+  function toggleSecretVisibility(elementId, btn) {
+    const el = document.getElementById(elementId);
+    if (el.innerText.includes('••••')) {
+      el.innerText = el.getAttribute('data-secret');
+      btn.innerText = '🙈';
+    } else {
+      el.innerText = '••••••••••';
+      btn.innerText = '👁';
+    }
+  }
+
   document.getElementById('toggleSecret').addEventListener('click', () => {
     const secretInput = document.getElementById('secret');
     secretInput.type = secretInput.type === 'password' ? 'text' : 'password';
   });
-
-  // Helper mencegah XSS dasar
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  }
 </script>
 </body>
 </html>
