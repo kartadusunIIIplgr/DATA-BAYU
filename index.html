@@ -59,9 +59,8 @@
 
   .form-group { margin-bottom: 20px; text-align: left; }
   .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-  .input-wrap { position: relative; }
-  .input-wrap input { width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main); font-size: 0.95rem; transition: var(--transition); font-family: inherit; }
-  .input-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .form-input { width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main); font-size: 0.95rem; transition: var(--transition); font-family: inherit; }
+  .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   
   .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), #0077cc); color: #fff; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 700; cursor: pointer; transition: var(--transition); margin-top: 10px; }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
@@ -107,7 +106,7 @@
   .btn-add:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--accent-glow); }
 
   /* Grid Layout */
-  .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
   
   .vault-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: var(--transition); position: relative; }
   .vault-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
@@ -124,14 +123,20 @@
 
   .card-field { background: var(--bg-input); border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; transition: var(--transition); }
   .card-field:hover { border-color: var(--border); }
-  .field-label { font-size: 0.7rem; color: var(--text-dim); width: 50px; text-transform: uppercase; }
+  .field-label { font-size: 0.7rem; color: var(--text-dim); width: 50px; text-transform: uppercase; flex-shrink: 0; }
   .field-value { flex: 1; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .field-actions { display: flex; gap: 5px; }
-  .btn-icon { background: transparent; border: none; color: var(--text-dim); cursor: pointer; padding: 4px; border-radius: 4px; transition: var(--transition); }
+  .field-actions { display: flex; gap: 5px; flex-shrink: 0; }
+  .btn-icon { background: transparent; border: none; color: var(--text-dim); cursor: pointer; padding: 4px; border-radius: 4px; transition: var(--transition); font-size: 1rem; }
   .btn-icon:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
 
+  /* Notes Box - Khusus Catatan */
+  .card-notes { background: var(--bg-input); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid transparent; transition: var(--transition); }
+  .card-notes:hover { border-color: var(--border); }
+  .notes-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; }
+  .notes-text { font-size: 0.9rem; color: var(--text-main); white-space: pre-wrap; word-wrap: break-word; line-height: 1.4; }
+
   .card-footer { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px; }
-  .btn-action { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 6px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: var(--transition); }
+  .btn-action { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 6px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: var(--transition); font-family: inherit; }
   .btn-action:hover { border-color: var(--accent); color: var(--accent); }
   .btn-action.danger:hover { border-color: var(--danger); color: var(--danger); }
 
@@ -188,15 +193,11 @@
     <form id="authForm">
       <div class="form-group">
         <label>Alamat Email</label>
-        <div class="input-wrap">
-          <input id="email" type="email" placeholder="nama@email.com" required>
-        </div>
+        <input id="email" type="email" class="form-input" placeholder="nama@email.com" required>
       </div>
       <div class="form-group">
         <label>Password</label>
-        <div class="input-wrap">
-          <input id="password" type="password" placeholder="Minimal 8 karakter" minlength="8" required>
-        </div>
+        <input id="password" type="password" class="form-input" placeholder="Minimal 8 karakter" minlength="8" required>
       </div>
       <button type="submit" id="authSubmit" class="btn-primary">Masuk ke Brankas</button>
       <p id="authMsg" style="color: var(--danger); font-size: 0.85rem; margin-top: 15px; text-align: center;"></p>
@@ -260,7 +261,7 @@
     <div class="toolbar">
       <div class="search-box">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <input id="searchInput" type="text" placeholder="Cari judul, username, atau kata kunci...">
+        <input id="searchInput" type="text" placeholder="Cari judul, username, atau catatan...">
       </div>
       <button id="addBtn" class="btn-add">
         <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -283,28 +284,28 @@
       <input type="hidden" id="itemId">
       <div class="form-group">
         <label>Judul</label>
-        <input id="title" class="input-wrap" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);" required maxlength="120" placeholder="Contoh: Email Utama">
+        <input id="title" class="form-input" required maxlength="120" placeholder="Contoh: Email Utama">
       </div>
       <div class="form-group">
         <label>Kategori</label>
-        <select id="category" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);">
+        <select id="category" class="form-input">
           <option>Login</option><option>Catatan</option><option>Kartu</option><option>Lainnya</option>
         </select>
       </div>
       <div class="form-group">
         <label>Username / Identitas</label>
-        <input id="username" class="input-wrap" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);" maxlength="160" placeholder="username atau email">
+        <input id="username" class="form-input" maxlength="160" placeholder="username atau email">
       </div>
       <div class="form-group">
         <label>Password / Nilai Rahasia</label>
         <div style="display: flex; gap: 10px;">
-          <input id="secret" type="password" style="flex: 1; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main);" maxlength="500" placeholder="********">
+          <input id="secret" type="password" class="form-input" style="flex: 1;" maxlength="500" placeholder="********">
           <button type="button" id="toggleSecret" class="btn-icon" style="background: var(--bg-input); border: 1px solid var(--border); padding: 0 15px; border-radius: var(--radius); font-size: 1.2rem;">👁</button>
         </div>
       </div>
       <div class="form-group">
         <label>Catatan Tambahan</label>
-        <textarea id="notes" style="width: 100%; padding: 14px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-main); min-height: 80px; resize: vertical;" maxlength="5000" placeholder="Tambahkan catatan..."></textarea>
+        <textarea id="notes" class="form-input" style="min-height: 80px; resize: vertical;" maxlength="5000" placeholder="Tulis catatan rahasia di sini..."></textarea>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
         <button type="button" class="btn-action" id="cancelBtn" style="flex: 1; padding: 12px;">Batal</button>
@@ -434,7 +435,10 @@
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     
     let filtered = vaultData.filter(item => {
-      const matchSearch = (item.title?.toLowerCase().includes(searchTerm) || item.username?.toLowerCase().includes(searchTerm));
+      // Pencarian sekarang juga merambat ke catatan
+      const matchSearch = (item.title?.toLowerCase().includes(searchTerm) || 
+                          item.username?.toLowerCase().includes(searchTerm) || 
+                          item.notes?.toLowerCase().includes(searchTerm));
       const matchCat = (currentFilter === '' || item.category === currentFilter);
       return matchSearch && matchCat;
     });
@@ -486,8 +490,15 @@
           </div>
         ` : ''}
 
+        ${item.notes ? `
+          <div class="card-notes">
+            <div class="notes-label">Catatan</div>
+            <div class="notes-text">${escapeHtml(item.notes)}</div>
+          </div>
+        ` : ''}
+
         <div class="card-footer">
-          <button class="btn-action" onclick="openModal('${item.id}')">✏️ Edit</button>
+          <button class="btn-action" onclick="openModal('${item.id}')">✏️ Edit Data</button>
           <button class="btn-action danger" onclick="deleteItem('${item.id}')">🗑️ Hapus</button>
         </div>
       `;
@@ -508,7 +519,7 @@
 
   document.getElementById('searchInput').addEventListener('input', renderItems);
 
-  // MODAL
+  // MODAL LOGIC
   document.getElementById('addBtn').addEventListener('click', () => openModal(null));
   document.getElementById('closeModal').addEventListener('click', () => modalOverlay.classList.remove('show'));
   document.getElementById('cancelBtn').addEventListener('click', () => modalOverlay.classList.remove('show'));
@@ -516,7 +527,6 @@
 
   function openModal(id) {
     document.getElementById('itemForm').reset();
-    document.getElementById('itemMsg').textContent = '';
     
     if (id) {
       const item = vaultData.find(i => i.id == id);
@@ -527,7 +537,7 @@
       document.getElementById('category').value = item.category || 'Login';
       document.getElementById('username').value = item.username || '';
       document.getElementById('secret').value = item.secret || '';
-      document.getElementById('notes').value = item.notes || '';
+      document.getElementById('notes').value = item.notes || ''; // Mengambil data catatan lama
     } else {
       document.getElementById('modalTitle').innerText = 'Tambah Rahasia Baru';
       document.getElementById('itemId').value = '';
@@ -564,7 +574,7 @@
       modalOverlay.classList.remove('show');
       await fetchVaultItems();
     } catch (error) {
-      alert("Gagal menyimpan: " + error.message);
+      showToast("Gagal menyimpan: " + error.message, true);
     } finally {
       saveBtn.disabled = false;
       saveBtn.innerText = "Simpan Data";
